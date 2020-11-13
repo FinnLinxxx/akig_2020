@@ -179,6 +179,18 @@ Zur Verfügung stellen einer [PointCloud](http://docs.ros.org/en/melodic/api/sen
 `Victoria`
 Ermitteln der akutellen Pose und publishen eines Topics, welches dies als [PoseStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseStamped.html) angebibt.
 
+
+```bash
+$ roscore
+$ rosparam set /use_sim_time true
+$ roslaunch husky_viz view_robot.launch (odometrie aus, navigation an, evtl Add >> TF)
+$ rosbag play huskdrive_90degcorner_5m_sparse.bag --loop --clock
+$ cd ~/akig_2020/codebeispiele/victoria
+$ python3 husky_tf2pose.py    (muss bei jedem Durchgang der --loop neu gestartet werden)
+$ rostopic echo /husky/cmd_vel
+$ rosrun tf tf_echo map base_link
+```
+
 `Ziel - Die Aufgabe ist dann gelöst, wenn `
 
 
