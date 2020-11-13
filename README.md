@@ -144,17 +144,39 @@ $ mv name_or_record.bag sensorikraum2.bag
 ## 5. Publish transformed Pointcloud
 `Andreas B. -`
 
-Um `sensorikraum2.bag` auswerten zu können, folgende Befehle:
+Um `sensorikraum2.bag` auswerten zu können musste ich zunächst das bagfile in Ordnung bringen. Hierfür habe ich ein eigenes python skript erstellt, in dem die `child_frame_id` des `/imu/data`-Topics von `/imu` auf `imu` geändert wird. Der char `/` ist in diesem zusammenhang nicht erlaubt.
 
+`$ nano rewrite_frame_id_rosbag.py`
+```python
+import rosbag
+import sys
+
+inbag_name = sys.argv[1]
+outbag_name = inbag_name.replace('.bag', '-fixed.bag')
+
+with rosbag.Bag(outbag_name, 'w') as outbag:
+    for topic, msg, t in rosbag.Bag(inbag_name).read_messages():
+        if topic == "/imu/data" and msg.header.frame_id:
+            msg.header.frame_id = "imu"
+            outbag.write("/imu/data", msg, t)
+        else:
+            outbag.write(topic, msg, t)
+ ```
+ Zum verwenden:
+ ```bash
+ $ python3 rewrite_frame_id_rosbag.py sensorikraum2.bag
+ ```
+Die erstellte `sensorikraum2-fixed.bag` Version kann anschließend weiter verwendet werden.
 
 ```bash
-$ rosbag play --clock sensorikraum2.bag --loop
-
-$ rosrun tf2_ros static_transform_publisher 1 0 0 0 0 0 map laser
-$ rosrun tf2_ros static_transform_publisher 1 0 0 0 0 0 map imu
+$ roscore
+$ rosparam set /use_sim_time true
+$ rosbag play --clock sensorikraum2-fixed.bag --loop
+$ rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 map laser
+$ rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 map imu
 
 $ rosrun rviz rviz
-(Add >> Imu >> Ok)
+(Add >> rviz_imu_plugin/Imu >> Ok und in rviz in der linken Spalte topic wählen und "enable box ✅" und dort _scale anpassen)
 (Add >> TF >> Ok)
 (Add >> PointCloud2 >> Ok)
 ```
