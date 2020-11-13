@@ -1,0 +1,133 @@
+#include <ros/ros.h>
+#include "std_msgs/String.h"
+#include "sensor_msgs/Imu.h"
+#include "geometry_msgs/PointStamped.h"
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
+/**
+ * This tutorial demonstrates simple receipt of messages over the ROS system.
+ */
+
+class Foo
+{
+public:
+ Foo()
+ {
+ }
+void tachyCallback(const geometry_msgs::PointStamped::ConstPtr&);
+double getX();
+double getY();
+double getZ();
+private:
+void setX(double);
+void setY(double);
+void setZ(double);
+double x_coord;
+double y_coord;
+double z_coord;
+};
+
+void Foo::tachyCallback(const geometry_msgs::PointStamped::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%s]", msg->header.frame_id.c_str());
+  setX(msg->point.x);
+  setY(msg->point.y);
+  setZ(msg->point.z);
+}
+void Foo::setX(double setX_fromTachy)
+{
+x_coord = setX_fromTachy;
+}
+void Foo::setY(double setY_fromTachy)
+{
+y_coord = setY_fromTachy;
+}
+void Foo::setZ(double setZ_fromTachy)
+{
+z_coord = setZ_fromTachy;
+}
+double Foo::getX()
+{
+return x_coord;
+}
+double Foo::getY()
+{
+return y_coord;
+}
+double Foo::getZ()
+{
+return z_coord;
+}
+
+
+
+
+class Bar
+{
+public:
+ Bar()
+ {
+ }
+void imuCallback(const sensor_msgs::Imu::ConstPtr&);
+int give();
+};
+
+void Bar::imuCallback(const sensor_msgs::Imu::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%s]", msg->header.frame_id.c_str());
+}
+int Bar::give()
+{
+return 6;
+}
+
+
+
+
+int main(int argc, char **argv)
+{
+  Foo foo_object;
+  Bar bar_object;
+  ros::init(argc, argv, "listener");
+  ros::NodeHandle n;
+  ros::Subscriber sub = n.subscribe("tachy_points", 1000, &Foo::tachyCallback, &foo_object);
+
+ros::NodeHandle m;
+  ros::Subscriber subm = m.subscribe("/imu/data", 1000, &Bar::imuCallback, &bar_object);
+
+
+//------- publish transform ---
+ ros::NodeHandle node;
+
+ tf2_ros::TransformBroadcaster tfb;
+ geometry_msgs::TransformStamped transformStamped;
+
+ 
+ transformStamped.header.frame_id = "map";
+ transformStamped.child_frame_id = "prisma_frame";
+ tf2::Quaternion q;
+       q.setRPY(0, 0, 0);
+ transformStamped.transform.rotation.x = q.x();
+ transformStamped.transform.rotation.y = q.y();
+ transformStamped.transform.rotation.z = q.z();
+ transformStamped.transform.rotation.w = q.w();
+
+while(ros::ok())
+{
+  ros::spinOnce();
+
+
+  transformStamped.transform.translation.x = foo_object.getX();
+  transformStamped.transform.translation.y = foo_object.getY();
+  transformStamped.transform.translation.z = foo_object.getZ();
+
+  transformStamped.header.stamp = ros::Time::now();
+  tfb.sendTransform(transformStamped);
+
+  std::cout << "TF SEND!" << std::endl;
+  //std::cout << "foo X: " << foo_object.getX() << std::endl;
+
+  ros::Duration(0.5).sleep(); 
+}
+  return 0;
+}

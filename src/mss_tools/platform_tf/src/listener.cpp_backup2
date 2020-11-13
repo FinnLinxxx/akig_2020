@@ -1,0 +1,220 @@
+#include <ros/ros.h>
+#include "std_msgs/String.h"
+#include "sensor_msgs/Imu.h"
+#include <sensor_msgs/PointCloud2.h>
+#include "geometry_msgs/PointStamped.h"
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
+/**
+ * This tutorial demonstrates a simple receipt of messages over the ROS system.
+ */
+
+class Foo
+{
+public:
+ Foo()
+ {
+ }
+void tachyCallback(const geometry_msgs::PointStamped::ConstPtr&);
+double getX();
+double getY();
+double getZ();
+private:
+void setX(double);
+void setY(double);
+void setZ(double);
+double x_coord;
+double y_coord;
+double z_coord;
+};
+
+void Foo::tachyCallback(const geometry_msgs::PointStamped::ConstPtr& msg)
+{
+  setX(0);
+  setY(0);
+  setZ(0);
+  ROS_INFO("I heard: [%s]", msg->header.frame_id.c_str());
+  setX(msg->point.x);
+  setY(msg->point.y);
+  setZ(msg->point.z);
+  
+
+}
+void Foo::setX(double setX_fromTachy)
+{
+x_coord = setX_fromTachy;
+}
+void Foo::setY(double setY_fromTachy)
+{
+y_coord = setY_fromTachy;
+}
+void Foo::setZ(double setZ_fromTachy)
+{
+z_coord = setZ_fromTachy;
+}
+double Foo::getX()
+{
+return x_coord;
+}
+double Foo::getY()
+{
+return y_coord;
+}
+double Foo::getZ()
+{
+return z_coord;
+}
+
+
+
+
+class Bar
+{
+public:
+ Bar()
+ {
+ }
+void imuCallback(const sensor_msgs::Imu::ConstPtr&);
+double getQX();
+double getQY();
+double getQZ();
+double getQW();
+private:
+void setQX(double);
+void setQY(double);
+void setQZ(double);
+void setQW(double);
+double qx_rot;
+double qy_rot;
+double qz_rot;
+double qw_rot;
+
+};
+
+void Bar::imuCallback(const sensor_msgs::Imu::ConstPtr& msg)
+{
+  setQX(0);
+  setQY(0);
+  setQZ(0);
+  setQW(1);
+  ROS_INFO("I heard: [%s]", msg->header.frame_id.c_str());
+  setQX(msg->orientation.x);
+  setQY(msg->orientation.y);
+  setQZ(msg->orientation.z);
+  setQW(msg->orientation.w);
+}
+void Bar::setQX(double setQX_fromImu)
+{
+qx_rot = setQX_fromImu;
+}
+void Bar::setQY(double setQY_fromImu)
+{
+qy_rot = setQY_fromImu;
+}
+void Bar::setQZ(double setQZ_fromImu)
+{
+qz_rot = setQZ_fromImu;
+}
+void Bar::setQW(double setQW_fromImu)
+{
+qw_rot = setQW_fromImu;
+}
+double Bar::getQX()
+{
+return qx_rot;
+}
+double Bar::getQY()
+{
+return qy_rot;
+}
+double Bar::getQZ()
+{
+return qz_rot;
+}
+double Bar::getQW()
+{
+return qw_rot;
+}
+
+
+
+int main(int argc, char **argv)
+{
+
+  double rotation_value = (atof(argv[1]) /180) * 3.141;
+  Foo foo_object;
+  Bar bar_object;
+  ros::init(argc, argv, "listener");
+  ros::NodeHandle n;
+  ros::Subscriber sub = n.subscribe("/tachy_points", 1000, &Foo::tachyCallback, &foo_object);
+
+ros::NodeHandle m;
+  ros::Subscriber subm = m.subscribe("imu/data", 1000, &Bar::imuCallback, &bar_object);
+
+ros::NodeHandle p;
+ros::Publisher path_points_pub = p.advertise<geometry_msgs::PointStamped>("path_points",10);
+
+//------- publish transform ---
+ ros::NodeHandle node;
+
+ tf2_ros::TransformBroadcaster tfb;
+ geometry_msgs::TransformStamped transformStamped;
+
+ 
+ 
+ transformStamped.header.frame_id = "map";
+ transformStamped.child_frame_id = "prisma_frame";
+ 
+
+ ros::Publisher tf_pub;
+
+while(ros::ok())
+{
+  ros::spinOnce();
+
+ tf2::Quaternion q_rotate(bar_object.getQX(), bar_object.getQY(), bar_object.getQZ(), bar_object.getQW() );
+
+ tf2::Quaternion q_value;
+       q_value.setRPY(0, 0, rotation_value);
+ q_rotate *= q_value;
+ 
+ transformStamped.transform.rotation.x = q_rotate.x(); //bar_object.getQX();
+ transformStamped.transform.rotation.y = q_rotate.y(); //bar_object.getQY();
+ transformStamped.transform.rotation.z = q_rotate.z(); //bar_object.getQZ();
+ transformStamped.transform.rotation.w = q_rotate.w(); //bar_object.getQW();
+
+//std::cout << "X: " << bar_object.getQX() << "Y: " << bar_object.getQY() << "Z: " << bar_object.getQZ() << "    W: " << bar_object.getQW() << std::endl; 
+
+std::vector<geometry_msgs::PointStamped> path_points;
+geometry_msgs::PointStamped last_path_point;
+
+  last_path_point.header.frame_id="tachy_frame";
+  last_path_point.point.x = foo_object.getX();
+  last_path_point.point.y = foo_object.getY();
+  last_path_point.point.z = foo_object.getZ();
+  last_path_point.header.stamp = ros::Time::now();
+  
+  path_points.push_back(last_path_point);
+
+
+  for(std::vector<geometry_msgs::PointStamped>::iterator it = path_points.begin(); it != path_points.end(); ++it){
+
+  path_points_pub.publish(*it);
+  }
+
+  transformStamped.transform.translation.x = foo_object.getX();
+  transformStamped.transform.translation.y = foo_object.getY();
+  transformStamped.transform.translation.z = foo_object.getZ();
+
+  transformStamped.header.stamp = ros::Time::now();
+ 
+
+  tfb.sendTransform(transformStamped);
+
+
+  std::cout << "TF SEND!" << std::endl;
+  //std::cout << "foo X: " << foo_object.getX() << std::endl;
+
+}
+  return 0;
+}
