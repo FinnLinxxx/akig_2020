@@ -138,6 +138,8 @@ $ mv name_or_record.bag sensorikraum2.bag
 
 ## 4. Publish 2D probability Map
 `Max - `
+![img](codebeispiele/max/ig_2stock_map_30092020.pgm)
+
 
 `Ziel - Die Aufgabe ist dann gelöst, wenn `
 
