@@ -117,38 +117,7 @@ $ rosbag record /scan_cloud /imu/data /imu/data_raw /transformed_ptcl
 (strg+c)
 $ mv name_or_record.bag sensorikraum2.bag
 ```
-
-## 1. Provide Fixed-point field
-`Andreas S. -`
-
-Zur Verfügung stellen einer [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) die die Fixpunkt der Netzmessung im 2. Stock der Ingenieurgeodäsie.
-
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
-
-## 2. Publish PoseStamped
-`Victoria`
-Ermitteln der akutellen Pose und publishen eines Topics, welches dies als [PoseStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseStamped.html) angebibt.
-
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
-
-
-## 3. Publish Hz, V, D
-`Matthias - `
-
-Aufgreifen der [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) von Andreas, um diese um [ChannelFloat32](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/ChannelFloat32.html) zu erweitern. Die Erweiterung betrifft zu jedem Punkt der PointCloud der dazu gehörige `hz`,`v`,`d`,... Wert welcher sich über den PoseStamped von Victoria ergibt.
-
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
-
-
-
-## 4. Publish 2D probability Map
-`Max - `
-Publishen einer probability Map, diese soll bezogen auf eventuell ground-truth Daten skalierbar sein.
-
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
-
-## 5. Publish transformed Pointcloud
-`Andreas B. -`
+---
 
 Um `sensorikraum2.bag` auswerten zu können musste ich zunächst das bagfile in Ordnung bringen. Hierfür habe ich ein eigenes python skript erstellt, in dem die `child_frame_id` des `/imu/data`-Topics von `/imu` auf `imu` geändert wird. Der char `/` ist in diesem zusammenhang nicht erlaubt.
 
@@ -197,6 +166,39 @@ Angenommen man möchte das `/scan_cloud` Topic um 7 Meter in x-Richtung verschie
 $ rosrun tf2_ros static_transform_publisher 7 0 0 0 0 0 map laser
 ```
 Die `/transformed_ptcl` zu verschieben/verdrehen ist nicht so ohne weiteres möglich, da diese als `frame_id:=map` hat und die `map` liegt definitionsgemäß im Ursprung, aber auch hier wäre eine Anpassung/Umschreibung mit dem `rewrite_frame_id_rosbag.py` möglich. 
+
+
+## 1. Provide Fixed-point field
+`Andreas S. -`
+
+Zur Verfügung stellen einer [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) die die Fixpunkt der Netzmessung im 2. Stock der Ingenieurgeodäsie.
+
+`Ziel - Die Aufgabe ist dann gelöst, wenn `
+
+## 2. Publish PoseStamped
+`Victoria`
+Ermitteln der akutellen Pose und publishen eines Topics, welches dies als [PoseStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseStamped.html) angebibt.
+
+`Ziel - Die Aufgabe ist dann gelöst, wenn `
+
+
+## 3. Publish Hz, V, D
+`Matthias - `
+
+Aufgreifen der [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) von Andreas, um diese um [ChannelFloat32](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/ChannelFloat32.html) zu erweitern. Die Erweiterung betrifft zu jedem Punkt der PointCloud der dazu gehörige `hz`,`v`,`d`,... Wert welcher sich über den PoseStamped von Victoria ergibt.
+
+`Ziel - Die Aufgabe ist dann gelöst, wenn `
+
+
+
+## 4. Publish 2D probability Map
+`Max - `
+Publishen einer probability Map, diese soll bezogen auf eventuell ground-truth Daten skalierbar sein.
+
+`Ziel - Die Aufgabe ist dann gelöst, wenn `
+
+## 5. Publish transformed Pointcloud
+`Andreas B. -`
 
 Um nun die lokal vom SICK gemessene `/scan_cloud` im Bezug auf die Örtlichkeit zu transformieren steht das `/imu/data` Topic zur verfügung, dass die zeitlich passende Orientierung des Systems zur Verfügung stellt. Koordinaten wurden in diesem Zusammenhang nicht bestimmt, bei einer reinen Verdrehung des Systems ist dies zu vernachlässigen (0,0,0). 
 
