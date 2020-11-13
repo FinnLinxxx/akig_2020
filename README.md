@@ -21,15 +21,28 @@ Folgende Meilensteine wurden bisher definiert:
 
 Es wird im folgenden davon ausgegangen, dass die Installation eines passenden [Ubuntu Systems (16.04, 18.04 oder 20.04)](https://ubuntu.com/download/desktop) mit dem dazu gehörigen [ROS-System (kinetic, melodic oder noetic)](http://wiki.ros.org/ROS/Installation) bereits vollständig durcheführt wurde. Spieziell für Raspberry Pis (Version 4) ist eventuell folgender [Blogeintrag](https://finnlinxxx.github.io/RaspRos4/) hilfreich.
 
-## 0. Installation - Husky
+## 0.1 Installation - Husky
 
 In Anlehnung an das [ROS-Tutorial](http://wiki.ros.org/ROS/Tutorials), soll ein eigener Workspace auf dem Raspberry Pi, der virtuellen Linux Umgebung oder sonst irgendeinem Linux-System auf dem Ubuntu läuft, erzeugt werden (siehe Kapitel [1.3.](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment)). Statt `catkin_ws` ist ein anderer Name zu wählen, etwa `workspace_husky`. Im dazu gehörigen `workspace_husky/src` Ordner können beliebig viele [ROS-Packages](http://wiki.ros.org/Packages) abgelegt werden, `catkin` übernimmt einen großteil der Verwaltung zur Erzeugung lauffähiger Programme bzw. Nodes. 
+
+Um einzelne bereits vorhandene und gut getestete Packages zu installieren die Paketmanager-Option `apt install` benutzen. Die Packages werden tief im System installiert `$ cd /opt/ros/melodic/...` und stehen somit jedem Benutzer zur Verfügung, evtl. muss vor dem Verwenden das Terminal neu gestartet werden oder `$ source ~/.bashr` erneut ausgeführt werden.
+```bash
+$ sudo apt install ros-melodic-imu-tools
+$ sudo apt install ros-melodic-xsens-driver
+(oder eben)
+$ sudo apt install ros-noetic-imu-tools
+$ sudo apt install ros-noetic-xsens-driver
+```
+
+Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laserscanner zur Verfügung, jedoch wollen wir in Zukunft im verfügbaren Quellcode selbst entwickeln, sodass eine einfache Installation nicht in Frage kommt. Der Sourcecode soll für die Art Pakete in einen eigenen Workspace geladen werden und liegt somit an der dieser Stelle verwaltet vor.
 
 Folgende Packete sind mit folgenden Befehlen in den Workspace zu laden :
 ```bash
 $ cd ~/workspace_husky/src
 $ git clone https://github.com/husky/husky.git
 $ git clone https://github.com/clearpathrobotics/LMS1xx
+$ git clone https://github.com/team-vigir/vigir_lidar_proc.git
+$ mv ~/akig_2020/src/mss_tools .
 ```
 Außerdem ist mittels `git` der für das eigene System benötigte Branch auszuwählen (in diesem Beispiel im Bezug auf die ROS Version `melodic`). Ist kein passender Branch für das eigene System verfügbar kann das nächstbeste ausgewählt werden, eventuell ist dieses trotzdem über catkin kompilierbar:
 ```bash
@@ -87,11 +100,17 @@ Die zueinander stehenden Koordinatensyteme (TF-Frames bzw. /tf) sind für dieses
 ```bash
 $ rosrun tf tf_echo map base_link
 ```
-Im Weiteren ist die Auswertung mit Programmcode zu erfolgen, vorzugsweise mit Python.
+Im Weiteren ist die Auswertung mit Programmcode zu erfolgen, vorzugsweise mit Python (siehe weiter unten).
 
-## 0. Installation - Sick&xsens 3D PW-Transformation
+## 0.2 Installation - Sick&xsens 3D PW-Transformation
 
-adsf
+
+Die Aufnahme erfolgte mit dem Befehl:
+```bash
+$ rosbag record /scan_cloud /imu/data /imu/data_raw /transformed_ptcl
+(strg+c)
+$ mv name_or_record.bag sensorikraum2.bag
+```
 
 
 ## 1. Publish PoseStamped
@@ -118,5 +137,20 @@ adsf
 
 ## 5. Publish transformed Pointcloud
 `Andreas B. -`
+
+Um `sensorikraum2.bag` auswerten zu können, folgende Befehle:
+
+
+```bash
+$ rosbag play --clock sensorikraum2.bag --loop
+
+$ rosrun tf2_ros static_transform_publisher 1 0 0 0 0 0 map laser
+$ rosrun tf2_ros static_transform_publisher 1 0 0 0 0 0 map imu
+
+$ rosrun rviz rviz
+(Add >> Imu >> Ok)
+(Add >> TF >> Ok)
+(Add >> PointCloud2 >> Ok)
+```
 
 `Ziel - Die Aufgabe ist dann gelöst, wenn `
