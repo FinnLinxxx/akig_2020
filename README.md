@@ -204,12 +204,20 @@ Zunächst muss in der Algorithmik ein neuer TF-Frame erzeugt werden, welcher nic
 
 Der Installation von oben folgend liegen im `$ cd ~/workspace_husky/src/mss_tools`-Ordner passende Packages vor. Diese wurden in C++ geschrieben.
 
-`1. platform_tf` mit dem C++ Programm `listen_platform_tf_talker.cpp` - 
-Erzeugt den TF-Frame
+`1. platform_tf` mit dem C++ Programm `listen_platform_tf_talker.cpp`
 
-`2. tf_points_global` mit dem C++ Programm `transform_point2pointcloud.cpp` 
+Erzeugt den TF-Frame, ausführbar mit (wenn keine `tachy_points` gepublished werden wird 0,0,0 angenommen):
+```bash
+$ rosrun platform_tf listen_platform_tf_talker /tachy_points /imu/data 22
+```
+
+`2. tf_points_global` mit dem C++ Programm `transform_point2pointcloud.cpp`
+
 nimmt den TF-Frame auf und erzeugt eine neue Punktwolke mit neuem Namen.
-
+Ausführbar mit:
+```bash
+$ rosrun tf_points_global transform_point2pointcloud _ptcl2_global_frame:=lasertracker _ptcl2_local_frame:=leica_ms50 _ptcl2_input_topic:=/cloud_pcd _ptcl2_output_topic:=/transf_ms50_global _drop_when_same_position:=false
+```
 
 > **Ziel**: Die Aufgabe ist dann gelöst, wenn die `/scan_cloud` in einem übergeordneten Koordinatesystem transformiert vorliegt. Die benannten Programme lösen dies recht kompliziert bereits in C++, die neue Umsetzung soll in Python geschrieben werden.
 
