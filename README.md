@@ -25,13 +25,19 @@ Es wird im folgenden davon ausgegangen, dass die Installation eines passenden [U
 
 In Anlehnung an das [ROS-Tutorial](http://wiki.ros.org/ROS/Tutorials), soll ein eigener Workspace auf dem Raspberry Pi, der virtuellen Linux Umgebung oder sonst irgendeinem Linux-System auf dem Ubuntu läuft, erzeugt werden (siehe Kapitel [1.3.](http://wiki.ros.org/ROS/Tutorials/InstallingandConfiguringROSEnvironment)). Statt `catkin_ws` ist ein anderer Name zu wählen, etwa `workspace_husky`. Im dazu gehörigen `workspace_husky/src` Ordner können beliebig viele [ROS-Packages](http://wiki.ros.org/Packages) abgelegt werden, `catkin` übernimmt einen großteil der Verwaltung zur Erzeugung lauffähiger Programme bzw. Nodes. 
 
-Um einzelne bereits vorhandene und gut getestete Packages zu installieren die Paketmanager-Option `apt install` benutzen. Die Packages werden tief im System installiert `$ cd /opt/ros/melodic/...` und stehen somit jedem Benutzer zur Verfügung, evtl. muss vor dem Verwenden das Terminal neu gestartet werden oder `$ source ~/.bashr` erneut ausgeführt werden.
+Um einzelne bereits vorhandene und gut getestete Packages zu installieren die Paketmanager-Option `apt install` benutzen. Die Packages werden tief im System installiert `$ cd /opt/ros/noetic/...` und stehen somit jedem Benutzer zur Verfügung, evtl. muss vor dem Verwenden das Terminal neu gestartet werden oder `$ source ~/.bashr` erneut ausgeführt werden.
 ```bash
 $ sudo apt install ros-melodic-imu-tools
 $ sudo apt install ros-melodic-xsens-driver
+$ sudo apt install ros-melodic-eigen-stl-containers
+$ sudo apt install ros-melodic-tf2-sensor-msgs
+$ sudo apt install ros-melodic-pcl-ros
 (oder eben)
 $ sudo apt install ros-noetic-imu-tools
 $ sudo apt install ros-noetic-xsens-driver
+$ sudo apt install ros-noetic-eigen-stl-containers
+$ sudo apt install ros-noetic-tf2-sensor-msgs
+$ sudo apt install ros-noetic-pcl-ros
 ```
 
 Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laserscanner zur Verfügung, jedoch wollen wir in Zukunft im verfügbaren Quellcode selbst entwickeln, sodass eine einfache Installation nicht in Frage kommt. Der Sourcecode soll für die Art Pakete in einen eigenen Workspace geladen werden und liegt somit an der dieser Stelle verwaltet vor.
@@ -42,15 +48,15 @@ $ cd ~/workspace_husky/src
 $ git clone https://github.com/husky/husky.git
 $ git clone https://github.com/clearpathrobotics/LMS1xx
 $ git clone https://github.com/team-vigir/vigir_lidar_proc.git
-$ mv ~/akig_2020/src/mss_tools .
+$ cp -r ~/akig_2020/src/mss_tools .
 ```
-Außerdem ist mittels `git` der für das eigene System benötigte Branch auszuwählen (in diesem Beispiel im Bezug auf die ROS Version `melodic`). Ist kein passender Branch für das eigene System verfügbar kann das nächstbeste ausgewählt werden, eventuell ist dieses trotzdem über catkin kompilierbar:
+Außerdem ist mittels `git` der für das eigene System benötigte Branch auszuwählen (in diesem Beispiel im Bezug auf die ROS Version `noetic`). Ist kein passender Branch für das eigene System verfügbar kann das nächstbeste ausgewählt werden, eventuell ist dieses trotzdem über catkin kompilierbar:
 ```bash
 $ cd ~/workspace_husky/src/husky
-$ git checkout melodic-devel
+$ git checkout noetic-devel
 $ cd ..
 $ cd ~/workspace_husky/src/MS1xx
-$ git checkout melodic-devel
+$ git checkout noetic-devel
 ```
 Anschließend ist der Workspace mit `$ catkin_make` zu kompilieren, eventuell auftretende Fehlermeldungen sind zu behandeln.
 ```bash
