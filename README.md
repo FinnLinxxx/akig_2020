@@ -168,6 +168,10 @@ with rosbag.Bag(outbag_name, 'w') as outbag:
  ```
 Die erstellte `sensorikraum2-fixed.bag` Version kann anschließend weiter verwendet werden.
 
+---
+
+Nun könnten die Topic `/imu/data`, `/scan_cloud` und `/transformed_ptcl` in `rviz` visualisiert werden. Hierfür einfach über `>>File >> Open Config >> xsenssick3d.rviz` des codebeispiele Ordners laden. Um auch das `/imu/data_raw` Topic laden können, muss dieses im rewrite_frame_id_rosbag.py-Skript angepasst werden.
+
 ```bash
 $ roscore
 $ rosparam set /use_sim_time true
@@ -176,9 +180,31 @@ $ rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 map laser
 $ rosrun tf2_ros static_transform_publisher 0 0 0 0 0 0 map imu
 
 $ rosrun rviz rviz
+(Entweder die xsenssick3d.rviz Datei laden oder...)
 (Add >> rviz_imu_plugin/Imu >> Ok und in rviz in der linken Spalte topic wählen und "enable box ✅" und dort _scale anpassen)
 (Add >> TF >> Ok)
 (Add >> PointCloud2 >> Ok)
 ```
 
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
+Angenommen man möchte das `/scan_cloud` Topic um 7 Meter in x-Richtung verschieben, dann muss nur der `laser`-Frame angepasst werden, etwa:
+```bash
+$ rosrun tf2_ros static_transform_publisher 7 0 0 0 0 0 map laser
+```
+Die `/transformed_ptcl` zu verschieben/verdrehen ist nicht so ohne weiteres möglich, da diese als `frame_id:=map` hat und die `map` liegt definitionsgemäß im Ursprung, aber auch hier wäre eine Anpassung/Umschreibung mit dem `rewrite_frame_id_rosbag.py` möglich. 
+
+Um nun die lokal vom SICK gemessene `/scan_cloud` im Bezug auf die Örtlichkeit zu transformieren steht das `/imu/data` Topic zur verfügung, dass die zeitlich passende Orientierung des Systems zur Verfügung stellt. Koordinaten wurden in diesem Zusammenhang nicht bestimmt, bei einer reinen Verdrehung des Systems ist dies zu vernachlässigen (0,0,0). 
+
+Zunächst muss in der Algorithmik ein neuer TF-Frame erzeugt werden, welcher nicht statisch, sondern im Bezug auf die festzustellende Verdrehung der IMU ausgerichtet werden muss, im folgenden `prisma_frame` genannt. Die Punktwolke der `/scan_cloud` muss anschließend auf die `frame_id:=prisma_frame` bezogen werden, sodass eine räumliche Transformation erzeugt werden kann.
+
+Der Installation von oben folgend liegen im `$ cd ~/workspace_husky/src/mss_tools`-Ordner passende Packages vor. Diese wurden in C++ geschrieben.
+
+`1. platform_tf` mit dem C++ Programm `listen_platform_tf_talker.cpp` - 
+Erzeugt den TF-Frame
+
+`2. tf_points_global` mit dem C++ Programm `transform_point2pointcloud.cpp` 
+nimmt den TF-Frame auf und erzeugt eine neue Punktwolke mit neuem Namen.
+
+
+> **Ziel**: Die Aufgabe ist dann gelöst, wenn die `/scan_cloud` in einem übergeordneten Koordinatesystem transformiert vorliegt. Die benannten Programme lösen dies recht kompliziert bereits in C++, die neue Umsetzung soll in Python geschrieben werden.
+
+
