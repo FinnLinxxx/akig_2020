@@ -232,11 +232,49 @@ $ rosrun tf tf_echo map base_link
 ## 3. Publish Hz, V, D
 `Matthias`
 
-Aufgreifen der [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) von Andreas, um diese um diese zu erweitern. Die Erweiterung betrifft zu jedem Punkt der PointCloud2 die dazu gehörigen `hz`,`v`,`d`,... Wert welche sich über den PoseStamped von Victoria ergeben. 
+Bewegt sich der Roboter durch den zweiten Stock kann das Tachymeter wichtige Informationen zur aktuellen Position sammeln. Im Stand oder sogar während der Fahrt können hierfür die eingemessenen Punkte des Punktfeldes herangezogen werden. Um eine Messung auszuführen muss das Tachymeter zu den einzelnen Punkten ausgerichtet werden, hierfür reicht eine relativ grobe Richtungsvisur (hz, v) aus. Sind die Koordinaten des Punktfeldes und die aktuelle Pose des Roboters bekannt können diese Werte berechnet werden.
 
+Daher sollen die Fixpunkte von Andreas S. als [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) aufgegriffen werden. Die aktuelle Pose ergibt sich aus der Aufgabe von Victoria.
 
-Siehe hierfür Ausführung des Beispiele der Aufgabenpunkte 1 und 2. 
+Neben x,y und z kann eine PointCloud2 um beliebig viele Felder erweitert werden. Daher ist eine Punktwolke zu publishen, die die berechneten Werte `hz`,`v`,`d`,... stets enthält.
 
+Siehe hierfür die Ausführung (ähnlich zur Aufgabe 1):
+```bash
+$ vim ~/akig_2020/codebeispiele/matthias/publish_fixpoints_plusMeta.py
+```
+
+```python
+1 points = []
+2 for pt_from_list in fixed_point_ptcl:
+3    points.append([pt_from_list[1], pt_from_list[2], pt_from_list[3]])
+4
+5    fields = [  PointField('x', 0, PointField.FLOAT32, 1),
+                PointField('y', 4, PointField.FLOAT32, 1),
+                PointField('z', 8, PointField.FLOAT32, 1),
+                # PointField('rgb', 12, PointField.UINT32, 1),
+              ]
+6 header = Header()
+7 header.frame_id = "map"
+8 pc2 = point_cloud2.create_cloud(header, fields, points)
+9 pc2.header.stamp = rospy.Time.now()
+10 pub.publish(pc2)             
+```
+
+(1) Deklaration einer Liste in python
+
+(2) durch alle Punkte einer Numpy Matrix (fixed_point_ptcl) iterieren
+
+(3) Hinzufügen eines Punkte anhand der Punktkoordinaten aus der Numpy Matrix
+
+(5) Beschreiben der Felder die zur PointCloud2 gehören (3 Zuweisung zu 3 Hinzufügungen aus Zeile (3))
+
+(6,7) Normalen Header erzeugen und Frame Id setzen
+
+(8,9) PointCloud2 mit header, zugewiesenen Feldern und den Punkten erzeugen
+
+(10) Publishen als Topic
+
+Wie ein Subscriber geschrieben werden kann, der auch gleichzeitig Published ist der Aufgabe 2 (victoria) zu entnehmen.
 
 > **Ziel**: Die Aufgabe ist dann gelöst, wenn eine [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) gepublished wird die neben den x,z,y-Koordinaten auch hz,v,d als [PointField](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointField.html) enthält. 
 
