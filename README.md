@@ -110,6 +110,7 @@ Im Weiteren ist die Auswertung mit Programmcode zu erfolgen, vorzugsweise mit Py
 
 ## 0.2 Installation - Sick&xsens 3D PW-Transformation
 
+(nur für Dokumentationszwecke)
 
 Die Aufnahme erfolgte mit dem Befehl:
 ```bash
@@ -118,6 +119,7 @@ $ rosbag record /scan_cloud /imu/data /imu/data_raw /transformed_ptcl
 $ mv name_or_record.bag sensorikraum2.bag
 ```
 ---
+(nur für Dokumentationszwecke)
 
 Um `sensorikraum2.bag` auswerten zu können musste ich zunächst das bagfile in Ordnung bringen. Hierfür habe ich ein eigenes python skript erstellt, in dem die `child_frame_id` des `/imu/data`-Topics von `/imu` auf `imu` geändert wird. Der char `/` ist in diesem zusammenhang nicht erlaubt.
 
