@@ -24,6 +24,7 @@ def callback(data, args):
         translation, rotation = tfListener.lookupTransform("/base_link", "/map", t)
         ### translation and rotation --> ros api: 
         ### http://docs.ros.org/en/jade/api/geometry_msgs/html/msg/Transform.html
+        print(translation)
 
         print("Heard base_link tf")
 
