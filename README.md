@@ -40,7 +40,7 @@ $ sudo apt install ros-noetic-tf2-sensor-msgs
 $ sudo apt install ros-noetic-pcl-ros
 ```
 
-Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laserscanner zur Verfügung, jedoch wollen wir in Zukunft im verfügbaren Quellcode selbst entwickeln, sodass eine einfache Installation nicht in Frage kommt. Der Sourcecode soll für die Art Pakete in einen eigenen Workspace geladen werden und liegt somit an der dieser Stelle verwaltet vor.
+Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laserscanner zur Verfügung, jedoch wollen wir in Zukunft im verfügbaren Quellcode selbst entwickeln, sodass eine einfache Installation nicht in Frage kommt. Der Sourcecode soll in einen eigenen Workspace geladen werden und liegt somit an der dieser Stelle anschließend bereit.
 
 Folgende Packete sind mit folgenden Befehlen in den Workspace zu laden :
 ```bash
