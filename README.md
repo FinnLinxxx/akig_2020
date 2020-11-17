@@ -248,7 +248,7 @@ Siehe hierfür Ausführung des Beispiele der Aufgabenpunkte 1 und 2.
 Publishen einer probability Map, diese soll bezogen auf eventuell ground-truth Daten skalierbar sein.
 Eine solche probability Map steht unter `$ cd ~/akig_2020/records/saved_maps` zur verfügung.
 
-~[img](documents/folien/ig_2stock_map_30092020.jpg)
+![img](documents/folien/ig_2stock_map_30092020.jpg)
 
 Für Beispiele siehe ROS-Package [map_server](http://wiki.ros.org/map_server)
 
