@@ -169,17 +169,28 @@ Die `/transformed_ptcl` zu verschieben/verdrehen ist nicht so ohne weiteres mög
 
 
 ## 1. Provide Fixed-point field
-`Andreas S. -`
+`Andreas S.`
 
-Zur Verfügung stellen einer [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) die die Fixpunkt der Netzmessung im 2. Stock der Ingenieurgeodäsie.
+Zur Verfügung stellen einer [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) die die Fixpunkt der Netzmessung im 2. Stock der Ingenieurgeodäsie als Topic zur Verfügung stellt. Evaluierung der Sinnhaftigkeit sogenannter ["Dynamic Reconfiguration"](http://wiki.ros.org/dynamic_reconfigure) die es ermöglichen soll die Koordinatenliste mit eventuell vorhandenen Meta-Daten ins System zu bringen.
 
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
+Das Skript `$ nano ~/akig_2020/codebeispiele/andreasslateff/publish_fixpoints.py`, welches bereits Punkte einer Textdatei `$ nano ~/akig_2020/codebeispiele/andreasslateff/fixed-points.txt` einliest und als `/fixed_points` zur Verfügung stellt soll dementsprechend erweitert werden.
+
+Ausführung des Beispiels:
+```bash
+$ roscore
+$ cd ~/akig_2020/codebeispiele/andreasslateff
+$ python3 publish_fixpoints.py
+```
+
+> **Ziel**: Die Aufgabe ist es weitere mögliche Meta-Daten zu evaluieren und im Sinne der "dynamic_reconfigure"-Funktion an das System zu übergeben. Eine .cfg Datei beschreibt gut nachvollziehbar den Einlesevorgang.
 
 ## 2. Publish PoseStamped
 `Victoria`
-Ermitteln der akutellen Pose und publishen eines Topics, welches dies als [PoseStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseStamped.html) angebibt.
+
+Ermitteln der akutellen Pose und publishen eines Topics, welches dies statt als [TwistStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/TwistStamped.html) als [PoseStamped](http://docs.ros.org/en/melodic/api/geometry_msgs/html/msg/PoseStamped.html) ausgibt.
 
 
+Ausführung des Beispiels:
 ```bash
 $ roscore
 $ rosparam set /use_sim_time true
@@ -191,26 +202,58 @@ $ rostopic echo /husky/cmd_vel
 $ rosrun tf tf_echo map base_link
 ```
 
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
+```python
+
+1    def callback(data, args):
+2    ...
+3   
+4    rospy.init_node('husky_tf2pose')
+5
+6    tflistener = TransformListener()
+7    husky_vel = rospy.Publisher('husky/cmd_vel', geometry_msgs.msg.TwistStamped,queue_size=1)
+8    cmd = geometry_msgs.msg.TwistStamped()
+9    rospy.Subscriber("/tf", TFMessage, callback, (tflistener, husky_vel, cmd))
+```
+(1) die Callback-Funktion wird immer aufgerufen, wenn eine neue Nachricht auf dem `/tf` Topic zur Verfügung steht (siehe Zeile 9, 3. Argument).
+
+(4) benennt den Namen dieser Rosnode
+
+(6) TransformListener sind in der Lage `/tf`-Frames und die Beziehungen untereinander zu ermitteln (siehe code der zu Zeile (2) gehört).
+
+(7) erzeugt einen Publisher der ein Topic mit dem Namen `husky/cmd_vel` und dem Typ `TwistStamped` erzeugt. Wird in Zeile (9) an den Subscriber mit übergeben (siehe 4. Argument (Teil der Argumentenliste)). 
+
+(8) Deklaration einer `TwistStamped` Variablen, welche in Zeile (9) an den Subscriber mit übergeben (siehe 4. Argument (Teil der Argumentenliste)).
+
+(9) Aufbau eines Subscribers, welcher auf das `/tf`  Topic hört (1. Argument), dies ist von Typ `TFMessage` (2. Argument) und löst die callback-Funktion aus (3. Argument). An diese Callback-Funktion werden die Variablen `(tflistener, husky_vel, cmd)` übergeben, um dort mit diesen weiter zu arbeiten.
+
+> **Ziel**: Der verfügbare Subscriber/Publisher `husky_tf2pose.py` soll so bearbeitet werden, dass statt dem `TwistStamped` ein `PoseStamp` als Topic an das System übergeben wird. 
 
 
 ## 3. Publish Hz, V, D
-`Matthias - `
+`Matthias`
 
-Aufgreifen der [PointCloud](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud.html) von Andreas, um diese um [ChannelFloat32](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/ChannelFloat32.html) zu erweitern. Die Erweiterung betrifft zu jedem Punkt der PointCloud der dazu gehörige `hz`,`v`,`d`,... Wert welcher sich über den PoseStamped von Victoria ergibt.
+Aufgreifen der [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) von Andreas, um diese um diese zu erweitern. Die Erweiterung betrifft zu jedem Punkt der PointCloud2 die dazu gehörigen `hz`,`v`,`d`,... Wert welche sich über den PoseStamped von Victoria ergeben. 
 
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
+
+Siehe hierfür Ausführung des Beispiele der Aufgabenpunkte 1 und 2. 
+
+
+> **Ziel**: Die Aufgabe ist dann gelöst, wenn eine [PointCloud2](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointCloud2.html) gepublished wird die neben den x,z,y-Koordinaten auch hz,v,d als [PointField](http://docs.ros.org/en/melodic/api/sensor_msgs/html/msg/PointField.html) enthält. 
 
 
 
 ## 4. Publish 2D probability Map
-`Max - `
+`Max`
 Publishen einer probability Map, diese soll bezogen auf eventuell ground-truth Daten skalierbar sein.
+Eine solche probability Map steht unter `$ cd ~/akig_2020/records/saved_maps` zur verfügung.
 
-`Ziel - Die Aufgabe ist dann gelöst, wenn `
+Für Beispiele siehe ROS-Package [map_server](http://wiki.ros.org/map_server)
+
+> **Ziel**: Die Aufgabe ist dann gelöst, wenn wir wissen wie man eine probability Map in ROS skaliert einladen kann. 
+
 
 ## 5. Publish transformed Pointcloud
-`Andreas B. -`
+`Andreas B.`
 
 Um nun die lokal vom SICK gemessene `/scan_cloud` im Bezug auf die Örtlichkeit zu transformieren steht das `/imu/data` Topic zur verfügung, dass die zeitlich passende Orientierung des Systems zur Verfügung stellt. Koordinaten wurden in diesem Zusammenhang nicht bestimmt, bei einer reinen Verdrehung des Systems ist dies zu vernachlässigen (0,0,0). 
 
