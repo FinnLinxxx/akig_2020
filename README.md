@@ -28,13 +28,11 @@ In Anlehnung an das [ROS-Tutorial](http://wiki.ros.org/ROS/Tutorials), soll ein 
 Um einzelne bereits vorhandene und gut getestete Packages zu installieren, ist die Paketmanager-Option `apt install` zu benutzen. Die Packages werden tief im System abgelegt/installiert `$ cd /opt/ros/noetic/...` und stehen somit jedem Benutzer zur Verfügung, evtl. muss vor dem Verwenden das Terminal neu gestartet werden oder `$ source ~/.bashrc` erneut ausgeführt werden.
 ```bash
 $ sudo apt install ros-melodic-imu-tools
-$ sudo apt install ros-melodic-xsens-driver
 $ sudo apt install ros-melodic-eigen-stl-containers
 $ sudo apt install ros-melodic-tf2-sensor-msgs
 $ sudo apt install ros-melodic-pcl-ros
 (oder eben)
 $ sudo apt install ros-noetic-imu-tools
-$ sudo apt install ros-noetic-xsens-driver
 $ sudo apt install ros-noetic-eigen-stl-containers
 $ sudo apt install ros-noetic-tf2-sensor-msgs
 $ sudo apt install ros-noetic-pcl-ros
@@ -45,6 +43,7 @@ Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laser
 Folgende Packete sind mit folgenden Befehlen in den Workspace zu laden :
 ```bash
 $ cd ~/workspace_husky/src
+$ git clone https://github.com/ethz-asl/ethzasl_xsens_driver.git
 $ git clone https://github.com/husky/husky.git
 $ git clone https://github.com/clearpathrobotics/LMS1xx
 $ git clone https://github.com/team-vigir/vigir_lidar_proc.git
