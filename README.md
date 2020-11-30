@@ -31,11 +31,14 @@ $ sudo apt install ros-melodic-imu-tools
 $ sudo apt install ros-melodic-eigen-stl-containers
 $ sudo apt install ros-melodic-tf2-sensor-msgs
 $ sudo apt install ros-melodic-pcl-ros
+$ sudo apt install ros-melodic-laser-filters
+
 (oder eben)
 $ sudo apt install ros-noetic-imu-tools
 $ sudo apt install ros-noetic-eigen-stl-containers
 $ sudo apt install ros-noetic-tf2-sensor-msgs
 $ sudo apt install ros-noetic-pcl-ros
+$ sudo apt install ros-noetic-laser-filters
 ```
 
 Grundsätzlich stehen auch installierbare Packages für den Husky oder den Laserscanner zur Verfügung, jedoch wollen wir in Zukunft im verfügbaren Quellcode selbst entwickeln, sodass eine einfache Installation nicht in Frage kommt. Der Sourcecode soll in einen eigenen Workspace geladen werden und liegt somit an der dieser Stelle anschließend bereit.
@@ -63,6 +66,28 @@ $ cd ~/workspace_husky
 $ catkin_make
 ```
 
+Eventuell findet catkin PCL nicht, dann:
+```bash
+$ locate PCLConfig.cmake
+```
+Dort wird der Pfad angezeigt, wo PCL zu finden ist, dies muss nun in den CMakeList des Workspaces eingetragen werden, hierfür
+```bash
+$ cd workspace_husky/src
+$ nano CMakeLists.txt
+
+Und dort unter der Zeile:
+set(CATKIN_TOPLEVEL TRUE)
+dann folgende Zeile eintragen: der Pfad ist der oben mit locate festgestellte.
+set(PCL_DIR "/usr/lib/arm-linux-gnueabihf/cmake/pcl/")
+speichern und schließen.
+````
+
+Nun muss eventuell 2-3 catkin_make ausgeführt werden, bis das Projekt vollständig gebaut ist [100%].
+```bash
+$ catkin_make
+$ catkin_make
+$ catkin_make
+```
 Die Anmeldung des Workspaces ins System erfolgt wie gewohnt über den `$ source .` Befehl, etwa:
 ```bash
 $ source ~/workspace_husky/devel/setup.bash
