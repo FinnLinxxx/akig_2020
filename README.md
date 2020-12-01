@@ -70,10 +70,10 @@ Eventuell findet catkin PCL nicht, dann:
 ```bash
 $ locate PCLConfig.cmake
 ```
-Dort wird der Pfad angezeigt, wo PCL zu finden ist, dies muss nun in den CMakeList des Workspaces eingetragen werden, hierfür
+Dort wird der Pfad angezeigt, wo PCL zu finden ist, dies muss nun in den CMakeList des Workspaces eingetragen werden, hierfür braucht es sudo rechte.
 ```bash
 $ cd workspace_husky/src
-$ nano CMakeLists.txt
+$ sudo nano CMakeLists.txt
 
 Und dort unter der Zeile:
 set(CATKIN_TOPLEVEL TRUE)
