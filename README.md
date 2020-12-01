@@ -57,7 +57,7 @@ Außerdem ist mittels `git` der für das eigene System benötigte Branch auszuw�
 $ cd ~/workspace_husky/src/husky
 $ git checkout noetic-devel
 $ cd ..
-$ cd ~/workspace_husky/src/MS1xx
+$ cd ~/workspace_husky/src/LMS1xx
 $ git checkout noetic-devel
 ```
 Anschließend ist der Workspace mit `$ catkin_make` zu kompilieren, eventuell auftretende Fehlermeldungen sind zu behandeln.
