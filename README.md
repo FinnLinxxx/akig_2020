@@ -260,10 +260,10 @@ Um zu pushen folgende Befehle durchführen:
 $ git push origin finnsbranch
 (evtl. werdet ihr nun nach Benutzername und Passwort gefragt)
 ```
-Weitere Änderungen die ihr nun vornehmen wollt müssen ebenfalls wieder commitet und dann gepusht werden. Um eure Änderungen in das main bzw. master Repository zu bekommen müsst ihr mit dem Projektverantwortlichen immer Rücksprache halten. Hierbei kann es zu größeren Diskussionen zwischen den Programmierenden kommen, welche Änderungen in den Hauptzweig hinein kommen sollen. Der Hauptzweig sollte stets sauber gehalten werden und grundsätzlich Lauffähig (python programme, webseiten) und kompilierbar sein (C++, LaTex,...). Wenn einzelne Programmierarbeiten zb. ein neues Tool zur Navigation des Roboters aufgesetzt werden kann es sein, dass die neuen Programmbestandteile über Monate hinweg im Branch eines Projekts liegen, bis diese Reif genug sind, auch im Hauptzweig eingang zu finden.
+Weitere Änderungen die ihr nun vornehmen wollt müssen ebenfalls wieder commitet und dann mit dem beschriebenen Vorgehengepusht werden. Um eine Änderungen in das main bzw. master Repository zu bekommen müsst ihr mit dem Projektverantwortlichen immer Rücksprache halten. Hierbei kann es zu größeren Diskussionen zwischen den Programmierenden kommen, welche Änderungen in den Hauptzweig hinein kommen sollen. Der Hauptzweig sollte stets sauber gehalten werden und grundsätzlich Lauffähig (python programme, webseiten) und kompilierbar sein (C++, LaTex,...). Wenn einzelne Programmierarbeiten zb. ein neues Tool zur Navigation des Roboters aufgesetzt werden kann es sein, dass die neuen Programmbestandteile über Monate hinweg im Branch eines Projekts liegen, bis diese Reif genug sind, auch im Hauptzweig eingang zu finden. Innerhalb von AKIG reicht es zunächst vollkommen aus, wenn ihr in eurem eigenen Branch arbeitet, hier könnt ihr Änderungen vornehmen soviel ihr wollt, erst ganz am Ende müsst ihr euren Code vor dem Projektleiter (gut) begründen, damit alle Branches auf den Hauptzweig zurückgeführt werden können.
 
 
-Wenn ihr auf Probleme stoßt, dann kopiert euch die Meldung und gebt diese bei Google, Bing, Duckduckgo ein. Sehr häufig findet ihr dort sofort eine Lösung für eurer Git-Problem.
+**Wenn ihr auf Probleme stoßt, dann kopiert euch die Meldung und gebt diese bei Google, Bing, Duckduckgo ein. Sehr häufig findet ihr dort sofort eine Lösung für eurer Git-Problem.**
 
 
 ## 1. Provide Fixed-point field
