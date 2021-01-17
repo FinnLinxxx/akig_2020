@@ -194,6 +194,66 @@ $ rosrun tf2_ros static_transform_publisher 7 0 0 0 0 0 map laser
 Die `/transformed_ptcl` zu verschieben/verdrehen ist nicht so ohne weiteres möglich, da diese als `frame_id:=map` hat und die `map` liegt definitionsgemäß im Ursprung, aber auch hier wäre eine Anpassung/Umschreibung mit dem `rewrite_frame_id_rosbag.py` möglich. 
 
 
+## 0.3 GIT - First steps
+
+GIT ist ein mächtiges Tool, um Programmierern und Teams die Möglichkeit zu geben gemeinsam und projektbezogen die Datenhaltung übersichtlich zu gestalten. In immer größer werdenden Projekten ist die Übersicht über das Projekt wichtig und auch ganz ohne GIT eine Herausforderung. Auch wenn GIT also erstmal unübersichtlich und kompliziert daher kommt, viele andere Ansätze eine Versionsverwaltung zu realisieren (zb. in einer Dropbox `#FINAL_v13_fertig_letzteVersion_Abgabe_LinzerFinn_17122021_12h33xxx.docx`) sind gruseliger.
+
+Es benötigt einige Zeit sich die Befehle zu eigen zu machen und es braucht eben auch Gelegenheiten problembezogen mit GIT umgehen zu können. Daher wollen wir in AKIG zumindest ansatzweise mit GIT umgehen, ein großes Tutorial findet sich sobald man danach googled an vielzähligen Stellen. Man kann sagen, dass wenn man 3% der Git-Funktionalitäten beherscht 80% der allgemeinen Aufgaben lösen kann.
+
+Damit ihr Daten und Ordner in dieses Repository hochladen könnt ist es wichtig, dass ihr mir euren Github Namen nennt, sodass ich euch zu der Liste der Collaboratoren hinzufügen kann. Das ermöglicht euch sogenannte `Branches` anzulegen. Wenn man `Branch` übersetzt, dann bedeutet das soviel wie Abzweigung, ihr zweigt also aus dem aktuellen Projektzustand ab und in dieser Abzweigung könnt ihr eure eigenen Daten hinzufügen. Erst zu einem späteren Zeitpunkt, wenn klar ist, dass eure Arbeit eine "Verbesserung" im Sinne des Projekts ist, wird dieser Abzweigung wieder zum Hauptprojekt (main oder auch master) zurückgeführt (merge).
+
+Angenommen ihr habt also das aktuelle Git Repository heruntergeladen zB.
+```bash
+$ cd ~
+$ git clone https://github.com/FinnLinxxx/akig_2020.git
+
+Dann liegen die Dateien nun im Ordner `akig_2020`, deren Inhalt wir anschauen können.
+
+$ cd akig_2020
+$ ls
+```
+
+Um den aktuellen Status des Repositorys zu ermitteln navigiert ihr also in die Ordnerstruktur wie gezeigt hinein und gebt dort `$ git status` ein. Wenn ihr grade erst das Repo geladen habt und noch keine Änderung gemacht habt, erscheint dort der Hinweis `nothing to commit`. Ein Commit, dass ist ein Zeit und Kommentargestempelter Zustand eures Repositorys aus eurem eigenen Computer. Wenn ihr also einen sogenannten commit durchführt wird der aktuelle Zustand des Repos auf eurem Computer git-mäßig gesichert - nun, wer keine Änderung vorgenommen hat, kann auch nichts commiten. Ein Commit ist nach eigenem Ermessen durchzuführen, wenn man mit den Ánderungen die man vorgenommen hat zufrieden ist und das Gefühl hat der Aufgabenstellung einen Schritt weiter gekommen zu sein (ähnlich wie wenn man beim Schreiben einer Bachelorarbeit das Gefühl hat mal wieder auf das "Save" Symbol klicken zu müssen). 
+
+Ich, Finn, bearbeite eine Datei (zum Beispiel diese Readme) und führen danach einen Commit aus. 
+
+```bash
+$ cd ~/akig_2020
+$ nano README.md
+
+Ersetze nun den Namen Finn von zuvor, durch einen anderen Namen und speichere die Datei.
+
+$ git status
+
+Nun erscheint diese und evtl. andere Dateien die ihr schon bearbeitet hattet als modified, etc...
+Da wir die Änderung nicht im Hauptzweig (main bzw. master) machen sollten (und dürfen) erstellen wir zunächst den eigenen Branch
+$ git checkout -b finnsbranch
+$ git status
+
+gibt nun den aktuellen Branch an.
+
+Mit
+$ git add .
+bereiten wir die aktuellen (mit git status angezeigten) Änderung für den commit vor. Der `.` gibt an, dass wir alles vom aktuellen Ordnerpfad aus hinzufügen wollen, es ist ebenfalls möglich nur einzelne explizit benannte Dateien für den Commit vorzubereiten.
+
+Nach dem Hinzufügen können wir den Commit durchführen
+
+$ git commit -m "Hier nun ein Kommentar zu den gemachten Änderungen die für jeden verständlich sind"
+```
+
+Schauen wir jetzt wieder den `$ git status` an, gibt dieser an, dass wir nichts weiter zu commiten haben. Theoretisch können wir diese Änderung nun hochladen bzw. pushen, damit diese gut gesichert im Repository liegen. Analog zur Bachelorarbeit wäre dies das anlegen einer Sicherheitskopie bzw. eines Backups, vor allem nach einem Arbeitsreichen Tag oder einer besonders wichtigen Änderung sollte man dies beim Arbeiten mit dem GIT-Projekt bzw. mit der Bachelorarbeit durchführen. Bevor ihr nicht gepusht habt, kann ich eure Änderung überhaupt nicht im Git-Repository sehen. 
+
+Um zu pushen folgende Befehle durchführen:
+```bash
+$ git push origin finnsbranch
+(evtl. werdet ihr nun nach Benutzername und Passwort gefragt)
+```
+Weitere Änderungen die ihr nun vornehmen wollt müssen ebenfalls wieder commitet und dann gepusht werden. Um eure Änderungen in das main bzw. master Repository zu bekommen müsst ihr mit dem Projektverantwortlichen immer Rücksprache halten. Hierbei kann es zu größeren Diskussionen zwischen den Programmierenden kommen, welche Änderungen in den Hauptzweig hinein kommen sollen. Der Hauptzweig sollte stets sauber gehalten werden und grundsätzlich Lauffähig (python programme, webseiten) und kompilierbar sein (C++, LaTex,...). Wenn einzelne Programmierarbeiten zb. ein neues Tool zur Navigation des Roboters aufgesetzt werden kann es sein, dass die neuen Programmbestandteile über Monate hinweg im Branch eines Projekts liegen, bis diese Reif genug sind, auch im Hauptzweig eingang zu finden.
+
+
+
+
+
 ## 1. Provide Fixed-point field
 `Andreas S.`
 
