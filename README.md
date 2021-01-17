@@ -220,24 +220,28 @@ Ich, Finn, bearbeite eine Datei (zum Beispiel diese Readme) und führen danach e
 ```bash
 $ cd ~/akig_2020
 $ nano README.md
-
+```
 Ersetze nun den Namen Finn von zuvor, durch einen anderen Namen und speichere die Datei.
-
+```bash
 $ git status
+```
 
 Nun erscheint diese und evtl. andere Dateien die ihr schon bearbeitet hattet als modified, etc...
 Da wir die Änderung nicht im Hauptzweig (main bzw. master) machen sollten (und dürfen) erstellen wir zunächst den eigenen Branch
+```bash
 $ git checkout -b finnsbranch
 $ git status
-
+```
 gibt nun den aktuellen Branch an.
 
 Mit
+```bash
 $ git add .
+```
 bereiten wir die aktuellen (mit git status angezeigten) Änderung für den commit vor. Der `.` gibt an, dass wir alles vom aktuellen Ordnerpfad aus hinzufügen wollen, es ist ebenfalls möglich nur einzelne explizit benannte Dateien für den Commit vorzubereiten.
 
 Nach dem Hinzufügen können wir den Commit durchführen
-
+```bash
 $ git commit -m "Hier nun ein Kommentar zu den gemachten Änderungen die für jeden verständlich sind"
 ```
 
@@ -251,7 +255,7 @@ $ git push origin finnsbranch
 Weitere Änderungen die ihr nun vornehmen wollt müssen ebenfalls wieder commitet und dann gepusht werden. Um eure Änderungen in das main bzw. master Repository zu bekommen müsst ihr mit dem Projektverantwortlichen immer Rücksprache halten. Hierbei kann es zu größeren Diskussionen zwischen den Programmierenden kommen, welche Änderungen in den Hauptzweig hinein kommen sollen. Der Hauptzweig sollte stets sauber gehalten werden und grundsätzlich Lauffähig (python programme, webseiten) und kompilierbar sein (C++, LaTex,...). Wenn einzelne Programmierarbeiten zb. ein neues Tool zur Navigation des Roboters aufgesetzt werden kann es sein, dass die neuen Programmbestandteile über Monate hinweg im Branch eines Projekts liegen, bis diese Reif genug sind, auch im Hauptzweig eingang zu finden.
 
 
-
+Wenn ihr auf Probleme stoßt, dann kopiert euch die Meldung und gebt diese bei Google, Bing, Duckduckgo ein. Sehr häufig findet ihr dort sofort eine Lösung für eurer Git-Problem.
 
 
 ## 1. Provide Fixed-point field
