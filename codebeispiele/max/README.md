@@ -13,7 +13,7 @@ $ rosrun map_server map_server karte
 
 Die für dieses Tutorial verwendete Karte befindet sich in diesem Ordner (`akig_2020/codebeispiele/max`). Neben der Occupancy Grid Map selbst (`ig_2stock_map_30092020.pgm`) lässt sich eine weitere Datei finden, welche in diesem Zusammenhang relevant ist (`ig_2stock_map_30092020.yaml`). Das yaml-File beinhaltet nämlich Informationen wie Ursprung, Verdrehung und Auflösung, mit denen die Karte in rviz visualisiert wird. Nähere Infos sind auf der [Wikiseite](http://wiki.ros.org/map_server), Abschnitt 1.2 zu finden.
 
-![img](ig_2stock_map_30092020.pgm)
+![img](images/ig_2stock_map_30092020.jpg)
 ```bash
 image: ig_2stock_map_30092020.pgm
 resolution: 0.050000
@@ -44,7 +44,7 @@ $ python3 change_map_data.py
 
 Zuallererst erscheint ein Fenster, in der eine verkleinerte Version der Karte gezeigt wird. (Möglicherweise ist das Fenster anfangs zu klein, um die Karte repräsentieren zu können. In diesem Fall einfach das Fenster vergrößern.) Hier wird man dazu aufgefordert, gewisse Bildkoordinaten zu bestimmen. Wie am Anfang des Tutorials schon erwähnt, werden für dieses simple Beispiel nur 2 Punkte benötigt. Das Messen der Bildkoordinaten erfolgt durch das Klicken mit der linken Maustaste. So könnte man als Erstes in die Mitte des blauen Kreises klicken, wie im nachfolgenden Bild zu erkennen ist. Die gemessenen Bildkoordinaten werden in der Shell ausgegeben. Dieser erste Punkt befindet sich somit im Sensorikraum und entspricht gleichzeitig auch den Ursprung des übergeordneten Koordinatensystems, welches in diesem Beispiel näherungsweise durch die ebenfalls im Bild ersichtlichen x- und y-Achse definiert wird. Daher hat der erste Punkt die Koordinaten (0, 0) m im übergeordneten System. Der zweite Punkt liegt, im Zuge dieses Beispiels, in der Mitte des roten Kreises. Nachdem dieser gemessen wurde, kann mit Enter (oder einer anderen beliebigen Taste) dieser Vorgang beendet werden.
 
-![img](map_edit.jpg)
+![img](images/map_edit.jpg)
 
 Als Nächstes fragt das Programm nach den Koordinaten des zweiten Punktes im übergeordneten System. In diesem Fall beträgt der tatsächliche x-Wert ungefähr 24 m, und für den y-Wert kann 33 m angenommen werden. Zuerst wird also `24` in die Shell eingegeben und mit Enter bestätigt. Danach erfolgt dasselbe mit `33`.
 
