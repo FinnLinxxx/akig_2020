@@ -1,9 +1,7 @@
-
-#!/usr/bin/env python
-# PointCloud2 as fix-pointis published
-# https://answers.ros.org/question/289576/understanding-the-bytes-in-a-pcl2-message/
-# Matthias Rosa, TU Wien, 19.2.2021
-# http://wiki.ros.org/dynamic_reconfigure
+# AKIG 2020 Matthias Rosa - 1607625
+# Programm fuer die Echzeitberechnung der Hz,V und D Werte
+# Publishes X,Y,Z from the fixpoints and the Hz,V,D Values from the Husky to the fixpoints
+# as a Point Cloud 2
 
 #TODO: Fixunkteliste durch Fixpunkte in TU austauschen.
 #TODO: Punktauswahl?
@@ -30,6 +28,7 @@ rospy.init_node("fixed_point_publisher")
 pub = rospy.Publisher("fixed_points", PointCloud2, queue_size=1)
 points = []
 
+# Funktion fuer die Berechnung der Hz,V,D Werte
 def callback(data, pub):
 
     y = data.pose.position.y
@@ -40,12 +39,14 @@ def callback(data, pub):
 	    data.pose.orientation.z,
 	    data.pose.orientation.w)
 
+    # Berechung der aktuellen Orientierung
     euler = tf.transformations.euler_from_quaternion(quat)
     roll = euler[0]
     pitch = euler[1]
     yaw = euler[2]
     o = yaw
 
+    # Berechnung der Hz,V,D Werte zu allen Fixpunkten
     for pt_from_list in fixed_point_ptcl:
         y_val = pt_from_list[1]
         x_val = pt_from_list[2]
@@ -59,6 +60,8 @@ def callback(data, pub):
         v = math.acos((z_val-z)/d)
         pt = [x_val, y_val, z_val, hz, v, d]
         points.append(pt)
+
+    # Konfiguration der PointCLoud2
     fields = [  PointField('x', 0, PointField.FLOAT32, 1),
                 PointField('y', 4, PointField.FLOAT32, 1),
                 PointField('z', 8, PointField.FLOAT32, 1),
